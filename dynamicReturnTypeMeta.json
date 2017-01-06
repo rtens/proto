@@ -1,0 +1,24 @@
+{
+  "methodCalls" : [
+    {
+      "class" : "\\rtens\\udity\\check\\DomainSpecification",
+      "method" : "given",
+      "position" : 0
+    },
+    {
+      "class" : "\\rtens\\udity\\check\\DomainSpecification",
+      "method" : "when",
+      "position" : 0
+    },
+    {
+      "class" : "\\rtens\\udity\\check\\DomainSpecification",
+      "method" : "tryTo",
+      "position" : 0
+    },
+    {
+      "class" : "\\rtens\\udity\\check\\DomainSpecification",
+      "method" : "projection",
+      "position" : 0
+    }
+  ]
+}
