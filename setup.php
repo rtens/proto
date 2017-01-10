@@ -54,13 +54,13 @@ if (!file_exists($composerJson)) {
     echo "Installing dependencies (takes a while)" . PHP_EOL;
     exec("php \"$composerPhar\" install 2>&1");
 
-    echo "Setting up readme.md";
+    echo "Setting up readme.md" . PHP_EOL;
     $readme = file_get_contents('readme_project.md');
     $readme = str_replace(['$vendor$', '$project$'], [$vendor, $project], $readme);
     file_put_contents('readme_project.md', $readme);
     exec("rm readme.md; mv readme_project.md readme.md");
 
-    echo "Cleaning up";
+    echo "Cleaning up" . PHP_EOL;
     exec("rm \"$me\"");
 
     echo "Resetting git" . PHP_EOL;
