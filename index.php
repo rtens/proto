@@ -3,7 +3,7 @@ require_once 'vendor/autoload.php';
 
 use rtens\domin\delivery\web\adapters\curir\root\IndexResource;
 use rtens\domin\delivery\web\WebApplication;
-use vendor\project\Application;
+use vendor\project\app\Application;
 use watoki\curir\WebDelivery;
 use watoki\karma\stores\StoringEventStore;
 use watoki\stores\stores\FileStore;

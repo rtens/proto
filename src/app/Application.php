@@ -1,5 +1,5 @@
 <?php
-namespace vendor\project;
+namespace vendor\project\app;
 
 use rtens\domin\delivery\web\WebApplication;
 use rtens\udity\app\Application as Udity;
