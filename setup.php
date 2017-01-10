@@ -38,33 +38,33 @@ if (!file_exists($composerJson)) {
         ]
     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 
+    echo "Setting up readme.md" . PHP_EOL;
+    exec("rm readme.md; mv readme_project.md readme.md");
+
     $replaceNamespaces = function($ins) use (&$replaceNamespaces, $vendor, $project) {
         foreach ($ins as $in) {
             if (is_dir($in)) {
                 $replaceNamespaces(glob($in . '/*'));
-            } else if (is_file($in) && substr($in, -4) == '.php') {
+            } else if (is_file($in)) {
                 $contents = file_get_contents($in);
-                $contents = str_replace("vendor\\project", "$vendor\\$project", $contents);
+                $contents = str_replace(
+                    ["vendor\\project", '$vendor$', '$project$'],
+                    ["$vendor\\$project", $vendor, $project],
+                    $contents);
                 file_put_contents($in, $contents);
             }
         }
     };
-    $replaceNamespaces(['index.php', 'src', 'spec']);
+    $replaceNamespaces(['readme.md', 'index.php', 'src', 'spec']);
 
     echo "Installing dependencies (takes a while)" . PHP_EOL;
     exec("php \"$composerPhar\" install 2>&1");
-
-    echo "Setting up readme.md" . PHP_EOL;
-    $readme = file_get_contents('readme_project.md');
-    $readme = str_replace(['$vendor$', '$project$'], [$vendor, $project], $readme);
-    file_put_contents('readme_project.md', $readme);
-    exec("rm readme.md; mv readme_project.md readme.md");
 
     echo "Cleaning up" . PHP_EOL;
     exec("rm \"$me\"");
 
     echo "Resetting git" . PHP_EOL;
-    exec("rm -rf \"$repo\"; git init; git add .gitignore .travis.yml; git add *.*; git commit -m \"Project skeleton cloned from https://github.com/rtens/proto\"");
+    exec("rm -rf \"$repo\"; git init; git add .gitignore .travis.yml src/app; git add *.*; git commit -m \"Project skeleton cloned from https://github.com/rtens/proto\"");
 
 } else {
 

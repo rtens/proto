@@ -9,6 +9,6 @@ class Application extends Udity {
     public function run(WebApplication $ui, array $domainClasses) {
         parent::run($ui, $domainClasses);
 
-        $ui->setNameAndBrand('todo');
+        $ui->setNameAndBrand('$project$');
     }
 }
