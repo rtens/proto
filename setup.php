@@ -54,9 +54,6 @@ if (!file_exists($composerJson)) {
     echo "Installing dependencies (takes a while)" . PHP_EOL;
     exec("php \"$composerPhar\" install 2>&1");
 
-    echo "Resetting git" . PHP_EOL;
-    exec("rm -rf \"$repo\"; git init; git add .gitignore; git add *.*; git commit -m \"First commit\"");
-
     echo "Setting up readme.md";
     $readme = file_get_contents('readme_project.md');
     $readme = str_replace(['$vendor$', '$project$'], [$vendor, $project], $readme);
@@ -65,6 +62,9 @@ if (!file_exists($composerJson)) {
 
     echo "Cleaning up";
     exec("rm \"$me\"");
+
+    echo "Resetting git" . PHP_EOL;
+    exec("rm -rf \"$repo\"; git init; git add .gitignore .travis.yml; git add *.*; git commit -m \"Project skeleton cloned from https://github.com/rtens/proto\"");
 
 } else {
 
