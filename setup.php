@@ -1,33 +1,14 @@
 <?php
 
+$IS_SETUP = true;
+
+$me = __FILE__;
 $repo = __DIR__ . '/.git';
 $binDir = __DIR__ . '/bin';
-$sigFile = $binDir . '/composer-installer.sig';
-$setupFile = $binDir . '/composer-setup.php';
 $composerPhar = $binDir . '/composer.phar';
 $composerJson = __DIR__ . '/composer.json';
 
-if (!file_exists($composerPhar)) {
-    @mkdir($binDir);
-    copy('https://composer.github.io/installer.sig', $sigFile);
-    copy('https://getcomposer.org/installer', $setupFile);
-
-    if (hash_file('SHA384', $setupFile) === trim(file_get_contents($sigFile))) {
-        echo 'Installing composer to bin/composer.phar';
-    } else {
-        echo 'Installer corrupt';
-        unlink($setupFile);
-        exit(1);
-    }
-    echo PHP_EOL;
-
-    exec('php ' . $setupFile);
-
-    unlink($setupFile);
-    unlink($sigFile);
-
-    rename(__DIR__ . '/composer.phar', $composerPhar);
-}
+include "install.php";
 
 if (!file_exists($composerJson)) {
     echo "Generating composer.json" . PHP_EOL;
@@ -71,16 +52,24 @@ if (!file_exists($composerJson)) {
     $replaceNamespaces(['index.php', 'src', 'spec']);
 
     echo "Installing dependencies (takes a while)" . PHP_EOL;
-    exec("php bin/composer.phar install 2>&1");
+    exec("php \"$composerPhar\" install 2>&1");
 
     echo "Resetting git" . PHP_EOL;
-    exec("rm -rf .git; git init; git add .gitignore; git add *.*; git commit -m \"First commit\"");
+    exec("rm -rf \"$repo\"; git init; git add .gitignore; git add *.*; git commit -m \"First commit\"");
+
+    echo "Setting up readme.md";
+    $readme = file_get_contents('readme_project.md');
+    $readme = str_replace(['$vendor$', '$project$'], [$vendor, $project], $readme);
+    file_put_contents('readme_project.md', $readme);
+    exec("rm readme.md; mv readme_project.md readme.md");
+
+    echo "Cleaning up";
+    exec("rm \"$me\"");
 
 } else {
 
     echo "Installing dependencies (takes a while)" . PHP_EOL;
-    exec("php bin/composer.phar install 2>&1");
+    exec("php \"$composerPhar\" install 2>&1");
 }
 
-echo "Done. Execute \"sh runspec.sh\" to run the tests and \"sh rundev.sh\" to run the application" . PHP_EOL;
-
+echo "Done. Execute \n\tsh runspec.sh\nto run the tests and \n\tsh rundev.sh\nto run the application" . PHP_EOL;
